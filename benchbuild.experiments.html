@@ -1,0 +1,982 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>benchbuild.experiments package &mdash; BenchBuild - Empirical Research Toolkit 1.3.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="BenchBuild - Empirical Research Toolkit 1.3.2 documentation" href="index.html"/>
+        <link rel="up" title="benchbuild package" href="benchbuild.html"/>
+        <link rel="next" title="benchbuild.experiments.polly package" href="benchbuild.experiments.polly.html"/>
+        <link rel="prev" title="benchbuild package" href="benchbuild.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> BenchBuild - Empirical Research Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="benchbuild.html">benchbuild package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="benchbuild.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">benchbuild.experiments package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-benchbuild.experiments.compilestats">benchbuild.experiments.compilestats module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-benchbuild.experiments.compilestats_ewpt">benchbuild.experiments.compilestats_ewpt module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-benchbuild.experiments.empty">benchbuild.experiments.empty module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-benchbuild.experiments.papi">benchbuild.experiments.papi module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-benchbuild.experiments.pjtest">benchbuild.experiments.pjtest module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-benchbuild.experiments.polyjit">benchbuild.experiments.polyjit module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-benchbuild.experiments.raw">benchbuild.experiments.raw module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="benchbuild.projects.html">benchbuild.projects package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="benchbuild.reports.html">benchbuild.reports package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="benchbuild.utils.html">benchbuild.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.bootstrap">benchbuild.bootstrap module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.container">benchbuild.container module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.driver">benchbuild.driver module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.experiment">benchbuild.experiment module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.likwid">benchbuild.likwid module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.log">benchbuild.log module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.project">benchbuild.project module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.report">benchbuild.report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.run">benchbuild.run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.settings">benchbuild.settings module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.slurm">benchbuild.slurm module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.test">benchbuild.test module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">BenchBuild - Empirical Research Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="benchbuild.html">benchbuild package</a> &raquo;</li>
+      
+    <li>benchbuild.experiments package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/benchbuild.experiments.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-benchbuild.experiments">
+<span id="benchbuild-experiments-package"></span><h1>benchbuild.experiments package<a class="headerlink" href="#module-benchbuild.experiments" title="Permalink to this headline">¶</a></h1>
+<p>Experiments module.</p>
+<p>By default, only experiments that are listed in the configuration are
+loaded automatically. See configuration variables:</p>
+<blockquote>
+<div><a href="#id1"><span class="problematic" id="id2">*</span></a>_PLUGINS_AUTOLOAD
+<a href="#id3"><span class="problematic" id="id4">*</span></a>_PLUGINS_EXPERIMENTS</div></blockquote>
+<dl class="function">
+<dt id="benchbuild.experiments.discover">
+<code class="descclassname">benchbuild.experiments.</code><code class="descname">discover</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments.html#discover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.discover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import all experiments listed in PLUGINS_EXPERIMENTS.</p>
+<dl class="docutils">
+<dt>Tests:</dt>
+<dd><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">benchbuild.settings</span> <span class="k">import</span> <span class="n">CFG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">benchbuild.experiments</span> <span class="k">import</span> <span class="n">discover</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">lg</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">lg</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;benchbuild&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lg</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;benchbuild&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">lg</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lg</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;benchbuild&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">handlers</span> <span class="o">=</span> <span class="p">[</span><span class="n">lg</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">CFG</span><span class="p">[</span><span class="s2">&quot;plugins&quot;</span><span class="p">][</span><span class="s2">&quot;experiments&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;benchbuild.non.existing&quot;</span><span class="p">,</span> <span class="s2">&quot;benchbuild.experiments.raw&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">discover</span><span class="p">()</span>
+<span class="go">Could not find &#39;benchbuild.non.existing&#39;</span>
+<span class="go">ImportError: No module named &#39;benchbuild.non&#39;</span>
+<span class="go">Found experiment: benchbuild.experiments.raw</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="benchbuild.experiments.polly.html">benchbuild.experiments.polly package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.experiments.polly.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.experiments.polly.html#module-benchbuild.experiments.polly.openmp">benchbuild.experiments.polly.openmp module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="benchbuild.experiments.polly.html#measurements">Measurements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.experiments.polly.html#module-benchbuild.experiments.polly.openmpvect">benchbuild.experiments.polly.openmpvect module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="benchbuild.experiments.polly.html#id1">Measurements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.experiments.polly.html#module-benchbuild.experiments.polly.polly">benchbuild.experiments.polly.polly module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="benchbuild.experiments.polly.html#the-polly-experiment">The &#8216;polly&#8217; Experiment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.experiments.polly.html#id2">Measurements</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.experiments.polly.html#module-benchbuild.experiments.polly.pollyperformance">benchbuild.experiments.polly.pollyperformance module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="benchbuild.experiments.polly.html#id3">The &#8216;polly&#8217; Experiment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.experiments.polly.html#id4">Measurements</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.experiments.polly.html#module-benchbuild.experiments.polly.vectorize">benchbuild.experiments.polly.vectorize module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="benchbuild.experiments.polly.html#the-polly-vectorize-experiment">The &#8216;polly-vectorize&#8217; Experiment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.experiments.polly.html#id5">Measurements</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-benchbuild.experiments.compilestats">
+<span id="benchbuild-experiments-compilestats-module"></span><h2>benchbuild.experiments.compilestats module<a class="headerlink" href="#module-benchbuild.experiments.compilestats" title="Permalink to this headline">¶</a></h2>
+<p>The &#8216;compilestats&#8217; Experiment.</p>
+<p>This experiment is a basic experiment in the benchbuild study. It simply runs
+all projects after compiling it with -O3 and catches all statistics emitted
+by llvm</p>
+<dl class="class">
+<dt id="benchbuild.experiments.compilestats.CompilestatsExperiment">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.compilestats.</code><code class="descname">CompilestatsExperiment</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/compilestats.html#CompilestatsExperiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.compilestats.CompilestatsExperiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="benchbuild.html#benchbuild.experiment.RuntimeExperiment" title="benchbuild.experiment.RuntimeExperiment"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiment.RuntimeExperiment</span></code></a></p>
+<p>The compilestats experiment.</p>
+<dl class="attribute">
+<dt id="benchbuild.experiments.compilestats.CompilestatsExperiment.NAME">
+<code class="descname">NAME</code><em class="property"> = 'cs'</em><a class="headerlink" href="#benchbuild.experiments.compilestats.CompilestatsExperiment.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.compilestats.CompilestatsExperiment.actions_for_project">
+<code class="descname">actions_for_project</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/compilestats.html#CompilestatsExperiment.actions_for_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.compilestats.CompilestatsExperiment.actions_for_project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="benchbuild.experiments.compilestats.PollyCompilestatsExperiment">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.compilestats.</code><code class="descname">PollyCompilestatsExperiment</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/compilestats.html#PollyCompilestatsExperiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.compilestats.PollyCompilestatsExperiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="benchbuild.html#benchbuild.experiment.RuntimeExperiment" title="benchbuild.experiment.RuntimeExperiment"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiment.RuntimeExperiment</span></code></a></p>
+<p>The compilestats experiment with polly enabled.</p>
+<dl class="attribute">
+<dt id="benchbuild.experiments.compilestats.PollyCompilestatsExperiment.NAME">
+<code class="descname">NAME</code><em class="property"> = 'p-cs'</em><a class="headerlink" href="#benchbuild.experiments.compilestats.PollyCompilestatsExperiment.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.compilestats.PollyCompilestatsExperiment.actions_for_project">
+<code class="descname">actions_for_project</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/compilestats.html#PollyCompilestatsExperiment.actions_for_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.compilestats.PollyCompilestatsExperiment.actions_for_project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="benchbuild.experiments.compilestats.collect_compilestats">
+<code class="descclassname">benchbuild.experiments.compilestats.</code><code class="descname">collect_compilestats</code><span class="sig-paren">(</span><em>project</em>, <em>experiment</em>, <em>config</em>, <em>clang</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/compilestats.html#collect_compilestats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.compilestats.collect_compilestats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collect compilestats.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="benchbuild.experiments.compilestats.get_compilestats">
+<code class="descclassname">benchbuild.experiments.compilestats.</code><code class="descname">get_compilestats</code><span class="sig-paren">(</span><em>prog_out</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/compilestats.html#get_compilestats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.compilestats.get_compilestats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the LLVM compilation stats from :prog_out:.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-benchbuild.experiments.compilestats_ewpt">
+<span id="benchbuild-experiments-compilestats-ewpt-module"></span><h2>benchbuild.experiments.compilestats_ewpt module<a class="headerlink" href="#module-benchbuild.experiments.compilestats_ewpt" title="Permalink to this headline">¶</a></h2>
+<p>The &#8216;compilestats_ewpt&#8217; Experiment.</p>
+<p>Gathers compilation statistics for compiling the project with the
+EWPT alias analysis enabled.</p>
+<dl class="class">
+<dt id="benchbuild.experiments.compilestats_ewpt.EWPTCompilestatsExperiment">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.compilestats_ewpt.</code><code class="descname">EWPTCompilestatsExperiment</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/compilestats_ewpt.html#EWPTCompilestatsExperiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.compilestats_ewpt.EWPTCompilestatsExperiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#benchbuild.experiments.compilestats.CompilestatsExperiment" title="benchbuild.experiments.compilestats.CompilestatsExperiment"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiments.compilestats.CompilestatsExperiment</span></code></a></p>
+<dl class="attribute">
+<dt id="benchbuild.experiments.compilestats_ewpt.EWPTCompilestatsExperiment.NAME">
+<code class="descname">NAME</code><em class="property"> = 'ewpt'</em><a class="headerlink" href="#benchbuild.experiments.compilestats_ewpt.EWPTCompilestatsExperiment.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.compilestats_ewpt.EWPTCompilestatsExperiment.extra_cflags">
+<code class="descname">extra_cflags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/compilestats_ewpt.html#EWPTCompilestatsExperiment.extra_cflags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.compilestats_ewpt.EWPTCompilestatsExperiment.extra_cflags" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-benchbuild.experiments.empty">
+<span id="benchbuild-experiments-empty-module"></span><h2>benchbuild.experiments.empty module<a class="headerlink" href="#module-benchbuild.experiments.empty" title="Permalink to this headline">¶</a></h2>
+<p>The &#8216;empty&#8217; Experiment.</p>
+<p>This experiment is for debugging purposes. It only prepares the basic
+directories for benchbuild. No compilation &amp; no run can be done with it.</p>
+<dl class="class">
+<dt id="benchbuild.experiments.empty.Empty">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.empty.</code><code class="descname">Empty</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/empty.html#Empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.empty.Empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="benchbuild.html#benchbuild.experiment.Experiment" title="benchbuild.experiment.Experiment"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiment.Experiment</span></code></a></p>
+<p>The empty experiment.</p>
+<dl class="attribute">
+<dt id="benchbuild.experiments.empty.Empty.NAME">
+<code class="descname">NAME</code><em class="property"> = 'empty'</em><a class="headerlink" href="#benchbuild.experiments.empty.Empty.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.empty.Empty.actions_for_project">
+<code class="descname">actions_for_project</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/empty.html#Empty.actions_for_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.empty.Empty.actions_for_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do nothing.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-benchbuild.experiments.papi">
+<span id="benchbuild-experiments-papi-module"></span><h2>benchbuild.experiments.papi module<a class="headerlink" href="#module-benchbuild.experiments.papi" title="Permalink to this headline">¶</a></h2>
+<p>PAPI based experiments.</p>
+<p>These types of experiments (papi &amp; papi-std) need to instrument the
+project with libbenchbuild support to work.</p>
+<dl class="class">
+<dt id="benchbuild.experiments.papi.PapiScopCoverage">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.papi.</code><code class="descname">PapiScopCoverage</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/papi.html#PapiScopCoverage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.papi.PapiScopCoverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="benchbuild.html#benchbuild.experiment.RuntimeExperiment" title="benchbuild.experiment.RuntimeExperiment"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiment.RuntimeExperiment</span></code></a></p>
+<p>PAPI-based dynamic SCoP coverage measurement.</p>
+<dl class="attribute">
+<dt id="benchbuild.experiments.papi.PapiScopCoverage.NAME">
+<code class="descname">NAME</code><em class="property"> = 'papi'</em><a class="headerlink" href="#benchbuild.experiments.papi.PapiScopCoverage.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.papi.PapiScopCoverage.actions_for_project">
+<code class="descname">actions_for_project</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/papi.html#PapiScopCoverage.actions_for_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.papi.PapiScopCoverage.actions_for_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create &amp; Run a papi-instrumented version of the project.</p>
+<p>This experiment uses the -jitable flag of libPolyJIT to generate
+dynamic SCoP coverage.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.papi.PapiScopCoverage.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/papi.html#PapiScopCoverage.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.papi.PapiScopCoverage.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do the postprocessing, after all projects are done.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="benchbuild.experiments.papi.PapiStandardScopCoverage">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.papi.</code><code class="descname">PapiStandardScopCoverage</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/papi.html#PapiStandardScopCoverage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.papi.PapiStandardScopCoverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#benchbuild.experiments.papi.PapiScopCoverage" title="benchbuild.experiments.papi.PapiScopCoverage"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiments.papi.PapiScopCoverage</span></code></a></p>
+<p>PAPI Scop Coverage, without JIT.</p>
+<dl class="attribute">
+<dt id="benchbuild.experiments.papi.PapiStandardScopCoverage.NAME">
+<code class="descname">NAME</code><em class="property"> = 'papi-std'</em><a class="headerlink" href="#benchbuild.experiments.papi.PapiStandardScopCoverage.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.papi.PapiStandardScopCoverage.actions_for_project">
+<code class="descname">actions_for_project</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/papi.html#PapiStandardScopCoverage.actions_for_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.papi.PapiStandardScopCoverage.actions_for_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create &amp; Run a papi-instrumented version of the project.</p>
+<p>This experiment uses the -jitable flag of libPolyJIT to generate
+dynamic SCoP coverage.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="benchbuild.experiments.papi.collect_compilestats">
+<code class="descclassname">benchbuild.experiments.papi.</code><code class="descname">collect_compilestats</code><span class="sig-paren">(</span><em>project</em>, <em>experiment</em>, <em>clang</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/papi.html#collect_compilestats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.papi.collect_compilestats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collect compilestats.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="benchbuild.experiments.papi.get_compilestats">
+<code class="descclassname">benchbuild.experiments.papi.</code><code class="descname">get_compilestats</code><span class="sig-paren">(</span><em>prog_out</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/papi.html#get_compilestats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.papi.get_compilestats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the LLVM compilation stats from :prog_out:.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-benchbuild.experiments.pjtest">
+<span id="benchbuild-experiments-pjtest-module"></span><h2>benchbuild.experiments.pjtest module<a class="headerlink" href="#module-benchbuild.experiments.pjtest" title="Permalink to this headline">¶</a></h2>
+<p>A test experiment for PolyJIT.</p>
+<p>This experiment should only be used to test various features of PolyJIT. It
+provides only 1 configuration (maximum number of cores) and tests 2 run-time
+execution profiles of PolyJIT:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>PolyJIT enabled, with specialization</li>
+<li>PolyJIT enabled, without specialization</li>
+</ol>
+</div></blockquote>
+<dl class="class">
+<dt id="benchbuild.experiments.pjtest.Test">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.pjtest.</code><code class="descname">Test</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/pjtest.html#Test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.pjtest.Test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#benchbuild.experiments.polyjit.PolyJIT" title="benchbuild.experiments.polyjit.PolyJIT"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiments.polyjit.PolyJIT</span></code></a></p>
+<p>An experiment that executes all projects with PolyJIT support.</p>
+<p>This is our default experiment for speedup measurements.</p>
+<dl class="attribute">
+<dt id="benchbuild.experiments.pjtest.Test.NAME">
+<code class="descname">NAME</code><em class="property"> = 'pj-test'</em><a class="headerlink" href="#benchbuild.experiments.pjtest.Test.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.pjtest.Test.actions_for_project">
+<code class="descname">actions_for_project</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/pjtest.html#Test.actions_for_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.pjtest.Test.actions_for_project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="benchbuild.experiments.pjtest.time_polyjit_and_polly">
+<code class="descclassname">benchbuild.experiments.pjtest.</code><code class="descname">time_polyjit_and_polly</code><span class="sig-paren">(</span><em>project</em>, <em>experiment</em>, <em>config</em>, <em>jobs</em>, <em>run_f</em>, <em>args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/pjtest.html#time_polyjit_and_polly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.pjtest.time_polyjit_and_polly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the given binary wrapped with time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>project</strong> &#8211; The benchbuild.project.</li>
+<li><strong>experiment</strong> &#8211; The benchbuild.experiment.</li>
+<li><strong>config</strong> &#8211; The benchbuild.settings.config.</li>
+<li><strong>jobs</strong> &#8211; Number of cores we should use for this exection.</li>
+<li><strong>run_f</strong> &#8211; The file we want to execute.</li>
+<li><strong>args</strong> &#8211; List of arguments that should be passed to the wrapped binary.</li>
+<li><strong>**kwargs</strong> &#8211; <p>Dictionary with our keyword args. We support the following
+entries:</p>
+<dl class="docutils">
+<dt>project_name: The real name of our project. This might not</dt>
+<dd>be the same as the configured project name, if we got wrapped
+with ::benchbuild.project.wrap_dynamic</dd>
+</dl>
+<p>has_stdin: Signals whether we should take care of stdin.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-benchbuild.experiments.polyjit">
+<span id="benchbuild-experiments-polyjit-module"></span><h2>benchbuild.experiments.polyjit module<a class="headerlink" href="#module-benchbuild.experiments.polyjit" title="Permalink to this headline">¶</a></h2>
+<p>The &#8216;polyjit&#8217; experiment.</p>
+<p>This experiment uses likwid to measure the performance of all binaries
+when running with polyjit support enabled.</p>
+<dl class="class">
+<dt id="benchbuild.experiments.polyjit.Compilestats">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.polyjit.</code><code class="descname">Compilestats</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#Compilestats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.Compilestats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#benchbuild.experiments.polyjit.PolyJIT" title="benchbuild.experiments.polyjit.PolyJIT"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiments.polyjit.PolyJIT</span></code></a></p>
+<p>Gather compilestats, with enabled JIT.</p>
+<dl class="attribute">
+<dt id="benchbuild.experiments.polyjit.Compilestats.NAME">
+<code class="descname">NAME</code><em class="property"> = 'pj-cs'</em><a class="headerlink" href="#benchbuild.experiments.polyjit.Compilestats.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.polyjit.Compilestats.actions_for_project">
+<code class="descname">actions_for_project</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#Compilestats.actions_for_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.Compilestats.actions_for_project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="benchbuild.experiments.polyjit.PJITRaw">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.polyjit.</code><code class="descname">PJITRaw</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PJITRaw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITRaw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#benchbuild.experiments.polyjit.PolyJIT" title="benchbuild.experiments.polyjit.PolyJIT"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiments.polyjit.PolyJIT</span></code></a></p>
+<p>An experiment that executes all projects with PolyJIT support.</p>
+<p>This is our default experiment for speedup measurements.</p>
+<dl class="attribute">
+<dt id="benchbuild.experiments.polyjit.PJITRaw.NAME">
+<code class="descname">NAME</code><em class="property"> = 'pj-raw'</em><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITRaw.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.polyjit.PJITRaw.actions_for_project">
+<code class="descname">actions_for_project</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PJITRaw.actions_for_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITRaw.actions_for_project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="benchbuild.experiments.polyjit.PJITRegression">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.polyjit.</code><code class="descname">PJITRegression</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PJITRegression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITRegression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#benchbuild.experiments.polyjit.PolyJIT" title="benchbuild.experiments.polyjit.PolyJIT"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiments.polyjit.PolyJIT</span></code></a></p>
+<p>This experiment will generate a series of regression tests.</p>
+<p>This can be used every time a new revision is produced for PolyJIT, as
+it will automatically collect any new SCoPs detected, using the JIT.</p>
+<p>The collection of the tests itself is intgrated into the JIT, so this
+experiment looks a lot like a RAW experiment, except we don&#8217;t run
+anything.</p>
+<dl class="attribute">
+<dt id="benchbuild.experiments.polyjit.PJITRegression.NAME">
+<code class="descname">NAME</code><em class="property"> = 'pj-collect'</em><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITRegression.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.polyjit.PJITRegression.actions_for_project">
+<code class="descname">actions_for_project</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PJITRegression.actions_for_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITRegression.actions_for_project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="benchbuild.experiments.polyjit.PJITlikwid">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.polyjit.</code><code class="descname">PJITlikwid</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PJITlikwid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITlikwid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#benchbuild.experiments.polyjit.PolyJIT" title="benchbuild.experiments.polyjit.PolyJIT"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiments.polyjit.PolyJIT</span></code></a></p>
+<p>An experiment that uses likwid&#8217;s instrumentation API for profiling.</p>
+<p>This instruments all projects with likwid instrumentation API calls
+in key regions of the JIT.</p>
+<p>This allows for arbitrary profiling of PolyJIT&#8217;s overhead and run-time</p>
+<dl class="attribute">
+<dt id="benchbuild.experiments.polyjit.PJITlikwid.NAME">
+<code class="descname">NAME</code><em class="property"> = 'pj-likwid'</em><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITlikwid.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.polyjit.PJITlikwid.actions_for_project">
+<code class="descname">actions_for_project</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PJITlikwid.actions_for_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITlikwid.actions_for_project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="benchbuild.experiments.polyjit.PJITpapi">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.polyjit.</code><code class="descname">PJITpapi</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PJITpapi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITpapi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#benchbuild.experiments.polyjit.PolyJIT" title="benchbuild.experiments.polyjit.PolyJIT"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiments.polyjit.PolyJIT</span></code></a></p>
+<p>Experiment that uses PolyJIT&#8217;s instrumentation facilities.</p>
+<p>This uses PolyJIT to instrument all projects with libPAPI based
+region measurements. In the end the region measurements are
+aggregated and metrics like the dynamic SCoP coverage are extracted.</p>
+<p>This uses the same set of flags as all other PolyJIT based experiments.</p>
+<dl class="attribute">
+<dt id="benchbuild.experiments.polyjit.PJITpapi.NAME">
+<code class="descname">NAME</code><em class="property"> = 'pj-papi'</em><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITpapi.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.polyjit.PJITpapi.actions_for_project">
+<code class="descname">actions_for_project</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PJITpapi.actions_for_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITpapi.actions_for_project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.polyjit.PJITpapi.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PJITpapi.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITpapi.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do the postprocessing, after all projects are done.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="benchbuild.experiments.polyjit.PJITperf">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.polyjit.</code><code class="descname">PJITperf</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PJITperf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITperf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#benchbuild.experiments.polyjit.PolyJIT" title="benchbuild.experiments.polyjit.PolyJIT"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiments.polyjit.PolyJIT</span></code></a></p>
+<p>An experiment that uses linux perf tools to generate flamegraphs.</p>
+<dl class="attribute">
+<dt id="benchbuild.experiments.polyjit.PJITperf.NAME">
+<code class="descname">NAME</code><em class="property"> = 'pj-perf'</em><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITperf.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.polyjit.PJITperf.actions_for_project">
+<code class="descname">actions_for_project</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PJITperf.actions_for_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PJITperf.actions_for_project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="benchbuild.experiments.polyjit.PolyJIT">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.polyjit.</code><code class="descname">PolyJIT</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PolyJIT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PolyJIT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="benchbuild.html#benchbuild.experiment.RuntimeExperiment" title="benchbuild.experiment.RuntimeExperiment"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiment.RuntimeExperiment</span></code></a></p>
+<p>The polyjit experiment.</p>
+<dl class="method">
+<dt id="benchbuild.experiments.polyjit.PolyJIT.actions_for_project">
+<code class="descname">actions_for_project</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PolyJIT.actions_for_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PolyJIT.actions_for_project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="benchbuild.experiments.polyjit.PolyJIT.init_project">
+<em class="property">classmethod </em><code class="descname">init_project</code><span class="sig-paren">(</span><em>project</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PolyJIT.init_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PolyJIT.init_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the benchbuild experiment.</p>
+<dl class="docutils">
+<dt>We perform this experiment in 2 steps:</dt>
+<dd><ol class="first last arabic simple">
+<li>with likwid disabled.</li>
+<li>with likwid enabled.</li>
+</ol>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>project</strong> &#8211; The project we initialize.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The initialized project.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="benchbuild.experiments.polyjit.PolyJITFull">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.polyjit.</code><code class="descname">PolyJITFull</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PolyJITFull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PolyJITFull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#benchbuild.experiments.polyjit.PolyJIT" title="benchbuild.experiments.polyjit.PolyJIT"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiments.polyjit.PolyJIT</span></code></a></p>
+<p>An experiment that executes all projects with PolyJIT support.</p>
+<p>This is our default experiment for speedup measurements.</p>
+<dl class="attribute">
+<dt id="benchbuild.experiments.polyjit.PolyJITFull.NAME">
+<code class="descname">NAME</code><em class="property"> = 'pj'</em><a class="headerlink" href="#benchbuild.experiments.polyjit.PolyJITFull.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.polyjit.PolyJITFull.actions_for_project">
+<code class="descname">actions_for_project</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#PolyJITFull.actions_for_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.PolyJITFull.actions_for_project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="benchbuild.experiments.polyjit.run_raw">
+<code class="descclassname">benchbuild.experiments.polyjit.</code><code class="descname">run_raw</code><span class="sig-paren">(</span><em>project</em>, <em>experiment</em>, <em>config</em>, <em>run_f</em>, <em>args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#run_raw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.run_raw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the given binary wrapped with nothing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>project</strong> &#8211; The benchbuild.project.</li>
+<li><strong>experiment</strong> &#8211; The benchbuild.experiment.</li>
+<li><strong>config</strong> &#8211; The benchbuild.settings.config.</li>
+<li><strong>run_f</strong> &#8211; The file we want to execute.</li>
+<li><strong>args</strong> &#8211; List of arguments that should be passed to the wrapped binary.</li>
+<li><strong>**kwargs</strong> &#8211; <p>Dictionary with our keyword args. We support the following
+entries:</p>
+<dl class="docutils">
+<dt>project_name: The real name of our project. This might not</dt>
+<dd>be the same as the configured project name, if we got wrapped
+with ::benchbuild.project.wrap_dynamic</dd>
+</dl>
+<p>has_stdin: Signals whether we should take care of stdin.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="benchbuild.experiments.polyjit.run_with_likwid">
+<code class="descclassname">benchbuild.experiments.polyjit.</code><code class="descname">run_with_likwid</code><span class="sig-paren">(</span><em>project</em>, <em>experiment</em>, <em>config</em>, <em>jobs</em>, <em>run_f</em>, <em>args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#run_with_likwid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.run_with_likwid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the given file wrapped by likwid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>project</strong> &#8211; The benchbuild.project.</li>
+<li><strong>experiment</strong> &#8211; The benchbuild.experiment.</li>
+<li><strong>config</strong> &#8211; The benchbuild.settings.config.</li>
+<li><strong>jobs</strong> &#8211; Number of cores we should use for this exection.</li>
+<li><strong>run_f</strong> &#8211; The file we want to execute.</li>
+<li><strong>args</strong> &#8211; List of arguments that should be passed to the wrapped binary.</li>
+<li><strong>**kwargs</strong> &#8211; <p>Dictionary with our keyword args. We support the following
+entries:</p>
+<dl class="docutils">
+<dt>project_name: The real name of our project. This might not</dt>
+<dd>be the same as the configured project name, if we got wrapped
+with ::benchbuild.project.wrap_dynamic</dd>
+</dl>
+<p>has_stdin: Signals whether we should take care of stdin.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="benchbuild.experiments.polyjit.run_with_papi">
+<code class="descclassname">benchbuild.experiments.polyjit.</code><code class="descname">run_with_papi</code><span class="sig-paren">(</span><em>project</em>, <em>experiment</em>, <em>config</em>, <em>jobs</em>, <em>run_f</em>, <em>args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#run_with_papi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.run_with_papi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the given file with PAPI support.</p>
+<p>This just runs the project as PAPI support should be compiled in
+already. If not, this won&#8217;t do a lot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>project</strong> &#8211; The benchbuild.project.</li>
+<li><strong>experiment</strong> &#8211; The benchbuild.experiment.</li>
+<li><strong>config</strong> &#8211; The benchbuild.settings.config.</li>
+<li><strong>jobs</strong> &#8211; Number of cores we should use for this exection.</li>
+<li><strong>run_f</strong> &#8211; The file we want to execute.</li>
+<li><strong>args</strong> &#8211; List of arguments that should be passed to the wrapped binary.</li>
+<li><strong>**kwargs</strong> &#8211; <p>Dictionary with our keyword args. We support the following
+entries:</p>
+<dl class="docutils">
+<dt>project_name: The real name of our project. This might not</dt>
+<dd>be the same as the configured project name, if we got wrapped
+with ::benchbuild.project.wrap_dynamic</dd>
+</dl>
+<p>has_stdin: Signals whether we should take care of stdin.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="benchbuild.experiments.polyjit.run_with_perf">
+<code class="descclassname">benchbuild.experiments.polyjit.</code><code class="descname">run_with_perf</code><span class="sig-paren">(</span><em>project</em>, <em>experiment</em>, <em>config</em>, <em>jobs</em>, <em>run_f</em>, <em>args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#run_with_perf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.run_with_perf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the given binary wrapped with time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>project</strong> &#8211; The benchbuild.project.</li>
+<li><strong>experiment</strong> &#8211; The benchbuild.experiment.</li>
+<li><strong>config</strong> &#8211; The benchbuild.settings.config.</li>
+<li><strong>jobs</strong> &#8211; Number of cores we should use for this exection.</li>
+<li><strong>run_f</strong> &#8211; The file we want to execute.</li>
+<li><strong>args</strong> &#8211; List of arguments that should be passed to the wrapped binary.</li>
+<li><strong>**kwargs</strong> &#8211; <p>Dictionary with our keyword args. We support the following
+entries:</p>
+<dl class="docutils">
+<dt>project_name: The real name of our project. This might not</dt>
+<dd>be the same as the configured project name, if we got wrapped
+with ::benchbuild.project.wrap_dynamic</dd>
+</dl>
+<p>has_stdin: Signals whether we should take care of stdin.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="benchbuild.experiments.polyjit.run_with_time">
+<code class="descclassname">benchbuild.experiments.polyjit.</code><code class="descname">run_with_time</code><span class="sig-paren">(</span><em>project</em>, <em>experiment</em>, <em>config</em>, <em>jobs</em>, <em>run_f</em>, <em>args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#run_with_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.run_with_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the given binary wrapped with time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>project</strong> &#8211; The benchbuild.project.</li>
+<li><strong>experiment</strong> &#8211; The benchbuild.experiment.</li>
+<li><strong>config</strong> &#8211; The benchbuild.settings.config.</li>
+<li><strong>jobs</strong> &#8211; Number of cores we should use for this exection.</li>
+<li><strong>run_f</strong> &#8211; The file we want to execute.</li>
+<li><strong>args</strong> &#8211; List of arguments that should be passed to the wrapped binary.</li>
+<li><strong>**kwargs</strong> &#8211; <p>Dictionary with our keyword args. We support the following
+entries:</p>
+<dl class="docutils">
+<dt>project_name: The real name of our project. This might not</dt>
+<dd>be the same as the configured project name, if we got wrapped
+with ::benchbuild.project.wrap_dynamic</dd>
+</dl>
+<p>has_stdin: Signals whether we should take care of stdin.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="benchbuild.experiments.polyjit.run_without_recompile">
+<code class="descclassname">benchbuild.experiments.polyjit.</code><code class="descname">run_without_recompile</code><span class="sig-paren">(</span><em>project</em>, <em>experiment</em>, <em>config</em>, <em>jobs</em>, <em>run_f</em>, <em>args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/polyjit.html#run_without_recompile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.polyjit.run_without_recompile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the given binary wrapped with time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>project</strong> &#8211; The benchbuild.project.</li>
+<li><strong>experiment</strong> &#8211; The benchbuild.experiment.</li>
+<li><strong>config</strong> &#8211; The benchbuild.settings.config.</li>
+<li><strong>jobs</strong> &#8211; Number of cores we should use for this exection.</li>
+<li><strong>run_f</strong> &#8211; The file we want to execute.</li>
+<li><strong>args</strong> &#8211; List of arguments that should be passed to the wrapped binary.</li>
+<li><strong>**kwargs</strong> &#8211; <p>Dictionary with our keyword args. We support the following
+entries:</p>
+<dl class="docutils">
+<dt>project_name: The real name of our project. This might not</dt>
+<dd>be the same as the configured project name, if we got wrapped
+with ::benchbuild.project.wrap_dynamic</dd>
+</dl>
+<p>has_stdin: Signals whether we should take care of stdin.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-benchbuild.experiments.raw">
+<span id="benchbuild-experiments-raw-module"></span><h2>benchbuild.experiments.raw module<a class="headerlink" href="#module-benchbuild.experiments.raw" title="Permalink to this headline">¶</a></h2>
+<p>The &#8216;raw&#8217; Experiment.</p>
+<p>This experiment is the basic experiment in the benchbuild study. It simply runs
+all projects after compiling it with -O3. The binaries are wrapped
+with the time command and results are written to the database.</p>
+<p>This forms the baseline numbers for the other experiments.</p>
+<div class="section" id="measurements">
+<h3>Measurements<a class="headerlink" href="#measurements" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>3 Metrics are generated during this experiment:</dt>
+<dd>time.user_s - The time spent in user space in seconds (aka virtual time)
+time.system_s - The time spent in kernel space in seconds (aka system time)
+time.real_s - The time spent overall in seconds (aka Wall clock)</dd>
+</dl>
+<dl class="class">
+<dt id="benchbuild.experiments.raw.RawRuntime">
+<em class="property">class </em><code class="descclassname">benchbuild.experiments.raw.</code><code class="descname">RawRuntime</code><span class="sig-paren">(</span><em>projects=None</em>, <em>group=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/raw.html#RawRuntime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.raw.RawRuntime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="benchbuild.html#benchbuild.experiment.RuntimeExperiment" title="benchbuild.experiment.RuntimeExperiment"><code class="xref py py-class docutils literal"><span class="pre">benchbuild.experiment.RuntimeExperiment</span></code></a></p>
+<p>The polyjit experiment.</p>
+<dl class="attribute">
+<dt id="benchbuild.experiments.raw.RawRuntime.NAME">
+<code class="descname">NAME</code><em class="property"> = 'raw'</em><a class="headerlink" href="#benchbuild.experiments.raw.RawRuntime.NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="benchbuild.experiments.raw.RawRuntime.actions_for_project">
+<code class="descname">actions_for_project</code><span class="sig-paren">(</span><em>project</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/raw.html#RawRuntime.actions_for_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.raw.RawRuntime.actions_for_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile &amp; Run the experiment with -O3 enabled.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="benchbuild.experiments.raw.run_with_time">
+<code class="descclassname">benchbuild.experiments.raw.</code><code class="descname">run_with_time</code><span class="sig-paren">(</span><em>project</em>, <em>experiment</em>, <em>config</em>, <em>jobs</em>, <em>run_f</em>, <em>args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/experiments/raw.html#run_with_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.experiments.raw.run_with_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the given binary wrapped with time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>project</strong> &#8211; The benchbuild project that has called us.</li>
+<li><strong>experiment</strong> &#8211; The benchbuild experiment which we operate under.</li>
+<li><strong>config</strong> &#8211; The benchbuild configuration we are running with.</li>
+<li><strong>jobs</strong> &#8211; The number of cores we are allowed to use. This may differ
+from the actual amount of available cores, obey it.
+We should enforce this from the outside. However, at the moment we
+do not do this.</li>
+<li><strong>run_f</strong> &#8211; The file we want to execute.</li>
+<li><strong>args</strong> &#8211; List of arguments that should be passed to the wrapped binary.</li>
+<li><strong>**kwargs</strong> &#8211; <p>Dictionary with our keyword args. We support the following
+entries:</p>
+<dl class="docutils">
+<dt>project_name: The real name of our project. This might not</dt>
+<dd>be the same as the configured project name, if we got wrapped
+with ::benchbuild.project.wrap_dynamic</dd>
+</dl>
+<p>has_stdin: Signals whether we should take care of stdin.
+may_wrap:</p>
+<blockquote>
+<div>Project may signal that it they are not suitable for
+wrapping. Usually because they scan/parse the output, which
+may interfere with the output of the wrapper binary.</div></blockquote>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="benchbuild.experiments.polly.html" class="btn btn-neutral float-right" title="benchbuild.experiments.polly package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="benchbuild.html" class="btn btn-neutral" title="benchbuild package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andreas Simbürger.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.3.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

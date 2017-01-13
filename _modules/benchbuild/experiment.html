@@ -1,0 +1,553 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>benchbuild.experiment &mdash; BenchBuild - Empirical Research Toolkit 1.3.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="BenchBuild - Empirical Research Toolkit 1.3.2 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> BenchBuild - Empirical Research Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../benchbuild.html">benchbuild package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">BenchBuild - Empirical Research Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>benchbuild.experiment</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for benchbuild.experiment</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">BenchBuild&#39;s skeleton for experiments.</span>
+
+<span class="sd">An benchbuild.experiment defines a series of phases that constitute a</span>
+<span class="sd">benchbuild compatible experiment. This is the default implementation of an</span>
+<span class="sd">experiment.</span>
+
+<span class="sd">Clients can derive from class class::benchbuild.experiment.Experiment and</span>
+<span class="sd">override the methods relvant to their experiment.</span>
+
+<span class="sd">An experiment can have a variable number of phases / steps / substeps.</span>
+
+<span class="sd">Phases / Steps / Substeps</span>
+<span class="sd">-------------------------</span>
+
+<span class="sd">All phases/steps/substeps support being used as a context manager. All 3 of</span>
+<span class="sd">them catch ProcessExecutionErrors that may be thrown from plumbum, without</span>
+<span class="sd">aborting the whole experiment. However, an error is tracked.</span>
+
+<span class="sd">Actions</span>
+<span class="sd">-------</span>
+
+<span class="sd">An experiment performs the following actions in order:</span>
+<span class="sd">    1. clean - Clean any previous runs that collide with our directory</span>
+<span class="sd">    2. prepare - Prepare the experiment, this is a good place to copy relevant</span>
+<span class="sd">                 files over for testing.</span>
+<span class="sd">    3. run (run_tests) - Run the experiment. The &#39;meat&#39; lies here. Override</span>
+<span class="sd">        This to perform all your experiment needs.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">path</span>
+
+<span class="kn">import</span> <span class="nn">regex</span>
+<span class="kn">from</span> <span class="nn">plumbum</span> <span class="k">import</span> <span class="n">local</span>
+<span class="kn">from</span> <span class="nn">plumbum.commands.processes</span> <span class="k">import</span> <span class="n">ProcessExecutionError</span>
+
+<span class="kn">from</span> <span class="nn">benchbuild</span> <span class="k">import</span> <span class="n">projects</span>
+<span class="kn">from</span> <span class="nn">benchbuild.project</span> <span class="k">import</span> <span class="n">ProjectRegistry</span>
+<span class="kn">from</span> <span class="nn">benchbuild.settings</span> <span class="k">import</span> <span class="n">CFG</span>
+<span class="kn">from</span> <span class="nn">benchbuild.utils.actions</span> <span class="k">import</span> <span class="p">(</span><span class="n">Clean</span><span class="p">,</span> <span class="n">CleanExtra</span><span class="p">,</span> <span class="n">MakeBuildDir</span><span class="p">,</span>
+                                      <span class="n">RequireAll</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">benchbuild.utils.run</span> <span class="k">import</span> <span class="n">GuardedRunException</span>
+
+
+<div class="viewcode-block" id="newline"><a class="viewcode-back" href="../../benchbuild.html#benchbuild.experiment.newline">[docs]</a><span class="k">def</span> <span class="nf">newline</span><span class="p">(</span><span class="n">ostream</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Break the current line in the output stream.</span>
+
+<span class="sd">    Don&#39;t reuse the current line, if :o: is not attached to a tty.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (stream): The stream we insert a newline.</span>
+
+<span class="sd">    Returns (stream): The stream</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ostream</span><span class="o">.</span><span class="n">isatty</span><span class="p">():</span>
+        <span class="n">ostream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\x1b</span><span class="s2">[L&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ostream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ostream</span></div>
+
+
+<div class="viewcode-block" id="static_var"><a class="viewcode-back" href="../../benchbuild.html#benchbuild.experiment.static_var">[docs]</a><span class="k">def</span> <span class="nf">static_var</span><span class="p">(</span><span class="n">varname</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorate something with a static variable.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            @staticvar(bar, 0)</span>
+<span class="sd">            def foo():</span>
+<span class="sd">                foo.bar = 1</span>
+<span class="sd">                return foo.bar</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        varname (str): The name of the static variable.</span>
+<span class="sd">        value: The initial value of the static variable.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A decorator that adds a new attribute to the given object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Decorate func. &quot;&quot;&quot;</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">varname</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">func</span>
+
+    <span class="k">return</span> <span class="n">decorate</span></div>
+
+
+<span class="nd">@contextmanager</span>
+<span class="nd">@static_var</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="phase"><a class="viewcode-back" href="../../benchbuild.html#benchbuild.experiment.phase">[docs]</a><span class="k">def</span> <span class="nf">phase</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">pname</span><span class="o">=</span><span class="s2">&quot;FIXME: Unset&quot;</span><span class="p">,</span> <span class="n">cleaner</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Introduce a new phase.</span>
+
+<span class="sd">    This just introduces a new (cosmetic) phase distinction between</span>
+<span class="sd">    different experiment phases.</span>
+<span class="sd">    This can be used as a contextmanager to distinguish different experiment</span>
+<span class="sd">    phases.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): Name of the phase.</span>
+<span class="sd">        pname (str): Project Name this phase will be started for.</span>
+<span class="sd">        cleaner (callable): Cleaner callable that will be invoked as</span>
+<span class="sd">            soon as the phase failed and we cannot recover.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">phase</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="kn">from</span> <span class="nn">logging</span> <span class="k">import</span> <span class="n">error</span>
+
+    <span class="n">main_msg</span> <span class="o">=</span> <span class="s2">&quot;PHASE &#39;</span><span class="si">{0}</span><span class="s2">&#39; </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">pname</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">main_msg</span> <span class="o">+</span> <span class="s2">&quot; START&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">main_msg</span> <span class="o">+</span> <span class="s2">&quot; OK&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ProcessExecutionError</span> <span class="k">as</span> <span class="n">proc_ex</span><span class="p">:</span>
+        <span class="n">error</span><span class="p">(</span><span class="s2">u&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">proc_ex</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">main_msg</span> <span class="o">+</span> <span class="s2">&quot; FAILED&quot;</span><span class="p">)</span>
+        <span class="n">cleaner</span><span class="p">()</span>
+        <span class="kn">import</span> <span class="nn">sys</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="n">GuardedRunException</span><span class="p">)</span> <span class="k">as</span> <span class="n">os_ex</span><span class="p">:</span>
+        <span class="n">error</span><span class="p">(</span><span class="n">os_ex</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">main_msg</span> <span class="o">+</span> <span class="s2">&quot; FAILED&quot;</span><span class="p">)</span>
+        <span class="n">cleaner</span><span class="p">()</span>
+        <span class="kn">import</span> <span class="nn">sys</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<span class="nd">@contextmanager</span>
+<span class="nd">@static_var</span><span class="p">(</span><span class="s2">&quot;counter&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="nd">@static_var</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="step"><a class="viewcode-back" href="../../benchbuild.html#benchbuild.experiment.step">[docs]</a><span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Introduce a new step.</span>
+
+<span class="sd">    This just introduces a new (cosmetic) step distinction between different</span>
+<span class="sd">    experiment steps.</span>
+<span class="sd">    This can be used as a contextmanager to distinguish different experiment</span>
+<span class="sd">    steps.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The name of the step</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">step</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="n">main_msg</span> <span class="o">=</span> <span class="s2">&quot;    STEP &#39;</span><span class="si">{0}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">main_msg</span> <span class="o">+</span> <span class="s2">&quot; START&quot;</span><span class="p">)</span>
+    <span class="k">yield</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">main_msg</span> <span class="o">+</span> <span class="s2">&quot; OK&quot;</span><span class="p">)</span></div>
+
+
+<span class="nd">@contextmanager</span>
+<span class="nd">@static_var</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="substep"><a class="viewcode-back" href="../../benchbuild.html#benchbuild.experiment.substep">[docs]</a><span class="k">def</span> <span class="nf">substep</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Introduce a new substep.</span>
+
+<span class="sd">    This just introduces a new (cosmetic) substep distinction between different</span>
+<span class="sd">    experiment steps.</span>
+<span class="sd">    This can be used as a contextmanager to distinguish different experiment</span>
+<span class="sd">    steps.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The name of the substep</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">substep</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="kn">from</span> <span class="nn">logging</span> <span class="k">import</span> <span class="n">error</span>
+    <span class="n">main_msg</span> <span class="o">=</span> <span class="s2">&quot;        SUBSTEP &#39;</span><span class="si">{0}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">main_msg</span> <span class="o">+</span> <span class="s2">&quot; START&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">main_msg</span> <span class="o">+</span> <span class="s2">&quot; OK&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ProcessExecutionError</span> <span class="k">as</span> <span class="n">proc_ex</span><span class="p">:</span>
+        <span class="n">error</span><span class="p">(</span><span class="n">proc_ex</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="n">GuardedRunException</span><span class="p">)</span> <span class="k">as</span> <span class="n">os_ex</span><span class="p">:</span>
+        <span class="n">error</span><span class="p">(</span><span class="n">os_ex</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_group_projects"><a class="viewcode-back" href="../../benchbuild.html#benchbuild.experiment.get_group_projects">[docs]</a><span class="k">def</span> <span class="nf">get_group_projects</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">experiment</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a list of project names for the given group.</span>
+
+<span class="sd">    Filter the projects assigned to this experiment by group.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        group (str): The group.</span>
+<span class="sd">        experiment (benchbuild.Experiment): The experiment we draw our projects</span>
+<span class="sd">            to filter from.</span>
+
+<span class="sd">    Returns (list):</span>
+<span class="sd">        A list of project names for the group that are supported by this</span>
+<span class="sd">        experiment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">projects</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">projects</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">projects</span><span class="p">:</span>
+        <span class="n">project</span> <span class="o">=</span> <span class="n">projects</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">project</span><span class="o">.</span><span class="n">group_name</span> <span class="o">==</span> <span class="n">group</span><span class="p">:</span>
+            <span class="n">group</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">group</span></div>
+
+
+<div class="viewcode-block" id="ExperimentRegistry"><a class="viewcode-back" href="../../benchbuild.html#benchbuild.experiment.ExperimentRegistry">[docs]</a><span class="k">class</span> <span class="nc">ExperimentRegistry</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Registry for benchbuild experiments.&quot;&quot;&quot;</span>
+
+    <span class="n">experiments</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register a project in the registry.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ExperimentRegistry</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">NAME</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ExperimentRegistry</span><span class="o">.</span><span class="n">experiments</span><span class="p">[</span><span class="n">cls</span><span class="o">.</span><span class="n">NAME</span><span class="p">]</span> <span class="o">=</span> <span class="n">cls</span></div>
+
+
+<div class="viewcode-block" id="Experiment"><a class="viewcode-back" href="../../benchbuild.html#benchbuild.experiment.Experiment">[docs]</a><span class="k">class</span> <span class="nc">Experiment</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ExperimentRegistry</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A series of commands executed on a project that form an experiment.</span>
+
+<span class="sd">    The default implementation should provide a sane environment for all</span>
+<span class="sd">    derivates.</span>
+
+<span class="sd">    One important task executed by the basic implementation is setting up</span>
+<span class="sd">    the default set of projects that belong to this project.</span>
+<span class="sd">    As every project gets registered in the ProjectFactory, the experiment</span>
+<span class="sd">    gets a list of experiment names that work as a filter.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new experiment instance and set some defaults.&quot;&quot;&quot;</span>
+        <span class="n">new_self</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Experiment</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">NAME</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> @ </span><span class="si">{1}</span><span class="s2"> does not define a NAME class attribute.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">cls</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">cls</span><span class="o">.</span><span class="n">__module__</span><span class="p">))</span>
+        <span class="n">new_self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">NAME</span>
+        <span class="k">return</span> <span class="n">new_self</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">projects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projects</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sourcedir</span> <span class="o">=</span> <span class="n">CFG</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">builddir</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">CFG</span><span class="p">[</span><span class="s2">&quot;build_dir&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">()),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">testdir</span> <span class="o">=</span> <span class="n">CFG</span><span class="p">[</span><span class="s2">&quot;test_dir&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_actions</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">populate_projects</span><span class="p">(</span><span class="n">projects</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Experiment.populate_projects"><a class="viewcode-back" href="../../benchbuild.html#benchbuild.experiment.Experiment.populate_projects">[docs]</a>    <span class="k">def</span> <span class="nf">populate_projects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">projects_to_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Populate the list of projects that belong to this experiment.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            projects_to_filter (list):</span>
+<span class="sd">                List of projects we want to assign to this experiment.</span>
+<span class="sd">                We intersect the list of projects with the list of supported</span>
+<span class="sd">                projects to get the list of projects that belong to this</span>
+<span class="sd">                experiment.</span>
+<span class="sd">            group (str):</span>
+<span class="sd">                In addition to the project filter, we provide a way to filter</span>
+<span class="sd">                whole groups.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projects</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">projects</span><span class="o">.</span><span class="n">discover</span><span class="p">()</span>
+        <span class="n">prjs</span> <span class="o">=</span> <span class="n">ProjectRegistry</span><span class="o">.</span><span class="n">projects</span>
+        <span class="k">if</span> <span class="n">projects_to_filter</span><span class="p">:</span>
+            <span class="n">allkeys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">prjs</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+            <span class="n">usrkeys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">projects_to_filter</span><span class="p">)</span>
+            <span class="n">prjs</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">prjs</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">allkeys</span> <span class="o">&amp;</span> <span class="n">usrkeys</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">group</span><span class="p">:</span>
+            <span class="n">prjs</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">name</span><span class="p">:</span> <span class="n">cls</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">cls</span> <span class="ow">in</span> <span class="n">prjs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">cls</span><span class="o">.</span><span class="n">GROUP</span> <span class="o">==</span> <span class="n">group</span>
+            <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">projects_to_filter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">projects_to_filter</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">projects</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">x</span><span class="p">:</span> <span class="n">prjs</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">prjs</span>
+            <span class="k">if</span> <span class="n">prjs</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">DOMAIN</span> <span class="o">!=</span> <span class="s2">&quot;debug&quot;</span> <span class="ow">or</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">projects_to_filter</span><span class="p">}</span></div>
+
+    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="Experiment.actions_for_project"><a class="viewcode-back" href="../../benchbuild.html#benchbuild.experiment.Experiment.actions_for_project">[docs]</a>    <span class="k">def</span> <span class="nf">actions_for_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the actions a project wants to run.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project (benchbuild.Project): the project we want to run.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="Experiment.actions"><a class="viewcode-back" href="../../benchbuild.html#benchbuild.experiment.Experiment.actions">[docs]</a>    <span class="k">def</span> <span class="nf">actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">actns</span> <span class="o">=</span> <span class="p">[</span><span class="n">Clean</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">MakeBuildDir</span><span class="p">(</span><span class="bp">self</span><span class="p">)]</span>
+
+        <span class="k">for</span> <span class="n">project</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">projects</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">projects</span><span class="p">[</span><span class="n">project</span><span class="p">](</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">actns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">RequireAll</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions_for_project</span><span class="p">(</span><span class="n">p</span><span class="p">)))</span>
+
+        <span class="n">actns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Clean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_empty</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="n">actns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CleanExtra</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">actns</span></div></div>
+
+
+<div class="viewcode-block" id="RuntimeExperiment"><a class="viewcode-back" href="../../benchbuild.html#benchbuild.experiment.RuntimeExperiment">[docs]</a><span class="k">class</span> <span class="nc">RuntimeExperiment</span><span class="p">(</span><span class="n">Experiment</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Additional runtime only features for experiments.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RuntimeExperiment.get_papi_calibration"><a class="viewcode-back" href="../../benchbuild.html#benchbuild.experiment.RuntimeExperiment.get_papi_calibration">[docs]</a>    <span class="k">def</span> <span class="nf">get_papi_calibration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">calibrate_call</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get calibration values for PAPI based measurements.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project (Project):</span>
+<span class="sd">                Unused (deprecated).</span>
+<span class="sd">            calibrate_call (benchbuild.utils.cmd):</span>
+<span class="sd">                The calibration command we will use.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">local</span><span class="o">.</span><span class="n">cwd</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builddir</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">local</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="n">BB_USE_DATABASE</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">BB_USE_CSV</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">BB_USE_FILE</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+                <span class="n">calib_out</span> <span class="o">=</span> <span class="n">calibrate_call</span><span class="p">()</span>
+
+        <span class="n">calib_pattern</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+            <span class="s1">r&#39;Real time per call \(ns\): (?P&lt;val&gt;[0-9]+.[0-9]+)&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">calib_out</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">calib_pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;val&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="RuntimeExperiment.persist_calibration"><a class="viewcode-back" href="../../benchbuild.html#benchbuild.experiment.RuntimeExperiment.persist_calibration">[docs]</a>    <span class="k">def</span> <span class="nf">persist_calibration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">calibration</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Persist the result of a calibration call.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project (benchbuild.Project):</span>
+<span class="sd">                The calibration values will be assigned to this project.</span>
+<span class="sd">            cmd (benchbuild.utils.cmd):</span>
+<span class="sd">                The command we used to generate the calibration values.</span>
+<span class="sd">            calibration (int):</span>
+<span class="sd">                The calibration time in nanoseconds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">calibration</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">benchbuild.utils.db</span> <span class="k">import</span> <span class="n">create_run</span>
+            <span class="kn">from</span> <span class="nn">benchbuild.utils</span> <span class="k">import</span> <span class="n">schema</span> <span class="k">as</span> <span class="n">s</span>
+
+            <span class="n">run</span><span class="p">,</span> <span class="n">session</span> <span class="o">=</span> <span class="n">create_run</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">cmd</span><span class="p">),</span> <span class="n">project</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">project</span><span class="o">.</span><span class="n">run_uuid</span><span class="p">)</span>
+            <span class="n">metric</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">Metric</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;papi.calibration.time_ns&quot;</span><span class="p">,</span>
+                              <span class="n">value</span><span class="o">=</span><span class="n">calibration</span><span class="p">,</span>
+                              <span class="n">run_id</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">metric</span><span class="p">)</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andreas Simbürger.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.3.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

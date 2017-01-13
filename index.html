@@ -1,0 +1,484 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Welcome to BenchBuild - Empirical Research Toolkit’s documentation! &mdash; BenchBuild - Empirical Research Toolkit 1.3.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="BenchBuild - Empirical Research Toolkit 1.3.2 documentation" href="#"/>
+        <link rel="next" title="benchbuild package" href="benchbuild.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> BenchBuild - Empirical Research Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="benchbuild.html">benchbuild package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="#">BenchBuild - Empirical Research Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="#">Docs</a> &raquo;</li>
+      
+    <li>Welcome to BenchBuild - Empirical Research Toolkit&#8217;s documentation!</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="welcome-to-benchbuild-empirical-research-toolkit-s-documentation">
+<h1>Welcome to BenchBuild - Empirical Research Toolkit&#8217;s documentation!<a class="headerlink" href="#welcome-to-benchbuild-empirical-research-toolkit-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p># BenchBuild: Empirical-Research Toolkit #</p>
+<p>[![Codacy Badge](<a class="reference external" href="https://api.codacy.com/project/badge/grade/0220d2cf77f543e182d93eb55edf4199)](https://www.codacy.com/app/simbuerg/benchbuild-study">https://api.codacy.com/project/badge/grade/0220d2cf77f543e182d93eb55edf4199)](https://www.codacy.com/app/simbuerg/benchbuild-study</a>)
+[![Documentation Status](<a class="reference external" href="https://readthedocs.org/projects/pprof-study/badge/?version=develop)](http://pprof-study.readthedocs.org/en/latest/">https://readthedocs.org/projects/pprof-study/badge/?version=develop)](http://pprof-study.readthedocs.org/en/latest/</a>?badge=develop)
+[![Build Status](<a class="reference external" href="https://travis-ci.org/simbuerg/benchbuild.svg?branch=develop)](https://travis-ci.org/simbuerg/benchbuild-study">https://travis-ci.org/simbuerg/benchbuild.svg?branch=develop)](https://travis-ci.org/simbuerg/benchbuild-study</a>)
+[![Code Issues](<a class="reference external" href="https://www.quantifiedcode.com/api/v1/project/aa7ecff87d7b44518498bcf93180b98d/snapshot/origin:develop:HEAD/badge.svg)](https://www.quantifiedcode.com/app/project/aa7ecff87d7b44518498bcf93180b98d">https://www.quantifiedcode.com/api/v1/project/aa7ecff87d7b44518498bcf93180b98d/snapshot/origin:develop:HEAD/badge.svg)](https://www.quantifiedcode.com/app/project/aa7ecff87d7b44518498bcf93180b98d</a>)</p>
+<p>BenchBuild provides a lightweight toolkit to conduct empirical compile-time
+and run-time experiments. Striving to automate all tedious and error-prone
+tasks, it downloads, configure and builds all supported projects fully
+automatic and provides tools to wrap the compiler and any resulting
+binary with a customized measurement.</p>
+<p>All results can be stored as the user desires. BenchBuild tracks the execution
+status of all its managed projects inside an own database.</p>
+<p>## Features ##</p>
+<ul class="simple">
+<li>Wrap compilation commands with arbitrary measurement functions written in
+python.</li>
+<li>Wrap binary commands with arbitrary measurement functions written in python.</li>
+<li>Parallel benchmarking using the SLURM cluster manager.</li>
+<li>Compile-time support for the gentoo portage tree using the <code class="docutils literal"><span class="pre">uchroot</span></code> command.</li>
+</ul>
+<p>## Requirements ##</p>
+<p>You need a working PostgreSQL installation (There is no special reason for
+PostgreSQL, but the backend is not configurable at the moment).
+In addition to the PostgreSQL server, you need libpqxx available for
+the psycopg2 package that benchbuild uses to connect.</p>
+<p>## Installation ##</p>
+<p>After you have installed all necessary libraries, you can just clone this
+repo and install via pip.</p>
+<p><code class="docutils literal"><span class="pre">`bash</span>
+<span class="pre">&gt;</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">benchbuild</span>
+<span class="pre">`</span></code></p>
+<p>This will pull in all necessary python libraries into your local python
+installation. The installed program to control the study is called
+<code class="docutils literal"><span class="pre">benchbuild</span></code>.</p>
+<p>## Configuration ##</p>
+<p><code class="docutils literal"><span class="pre">benchbuild</span></code> can be configured in various ways: (1) command-line arguments,
+(2) configuration file in .json format, (3) environment variables.</p>
+<p>You can dump the current active configuration with the command:
+<a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>bash
+&gt; benchbuild run -d</p>
+<p>BB_BENCHBUILD_EBUILD=&#8221;&#8221;
+BB_BENCHBUILD_PREFIX=&#8221;/bench-build&#8221;
+BB_BUILD_DIR=&#8221;/tmp/benchbuild&#8221;
+...
+<a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
+<p>You can dump this information in .json format using the command:
+<code class="docutils literal"><span class="pre">`bash</span>
+<span class="pre">&gt;</span> <span class="pre">benchbuild</span> <span class="pre">run</span> <span class="pre">-s</span>
+<span class="pre">`</span></code>
+However, be careful. It dumps _all_ configuration to .json, even those that are
+usually derived automatically (like UUIDs). In the future, this will be avoided
+automatically. For now, you should remove all ID related variables from the
+resulting .json file. The configuration file is searched from the current
+directory upwards automatically. Some key configuration variables:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">BB_BUILD_DIR</span></code>: The directory we place our temporary artifacts in.</li>
+<li><code class="docutils literal"><span class="pre">BB_TMP_DIR</span></code>: The directory we place our downloads in.</li>
+<li><code class="docutils literal"><span class="pre">BB_SRC_DIR</span></code>: The directory we pull additional artifacts from (e.g.,</li>
+<li>patches)</li>
+<li><code class="docutils literal"><span class="pre">BB_CLEAN</span></code>: Should the build directory be cleaned after the run?</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">BB_CONFIG_FILE</span></code>: Where is the config file? If you prefere an absolute</dt>
+<dd>location over automatic discovery.</dd>
+</dl>
+</li>
+<li><code class="docutils literal"><span class="pre">BB_DB_HOST</span></code>: Hostname of the database</li>
+<li><code class="docutils literal"><span class="pre">BB_DB_NAME</span></code>: Name of the database</li>
+<li><code class="docutils literal"><span class="pre">BB_DB_USER</span></code>: Username of the database</li>
+<li><code class="docutils literal"><span class="pre">BB_DB_PASS</span></code>: Password of the database</li>
+<li><code class="docutils literal"><span class="pre">BB_DB_ROLLBACK</span></code>: For testing: Rollback all db actions after a run.</li>
+<li><code class="docutils literal"><span class="pre">BB_JOBS</span></code>: Number of threads to use for compiling / run-time testing.</li>
+</ul>
+</div></blockquote>
+<p>You can set these in the .json config file or directly via environment variables.
+However, make sure that the values you pass in from the environment are valid
+JSON, or the configuration structure may ignore your input (or break).</p>
+<p>### SLURM Configuration ###</p>
+<p>If you want to run experiments in parallel on a cluster managed by SLURM, you can
+use BenchBuild to generate a bash script that is compatible with SLURM&#8217;s
+sbatch command.
+The following settings control SLURM&#8217;s configuration:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">BB_SLURM_ACCOUNT</span></code>: The resource account log in to.</li>
+<li><code class="docutils literal"><span class="pre">BB_SLURM_CPUS_PER_TASK</span></code>: How many cores/threads should we request per node?</li>
+<li><code class="docutils literal"><span class="pre">BB_SLURM_EXCLUSIVE</span></code>: Should we request the node exclusively or share it with other tasks?</li>
+<li><code class="docutils literal"><span class="pre">BB_SLURM_LOGS</span></code>: Where do we put our logs (deprecated).</li>
+<li><code class="docutils literal"><span class="pre">BB_SLURM_MAX_RUNNING</span></code>: We generate array-Jobs. This parameter controls the number of
+array elements that are allowed to run in parallel.</li>
+<li><code class="docutils literal"><span class="pre">BB_SLURM_MULTITHREAD</span></code>: Should Hyper-Threading be enabled or not?</li>
+<li><code class="docutils literal"><span class="pre">BB_SLURM_NICE</span></code>: Adjust our priority on the cluster manually.</li>
+<li><code class="docutils literal"><span class="pre">BB_SLURM_NICE_CLEAN</span></code>: Adjust the priority of the clean jobs.</li>
+<li><code class="docutils literal"><span class="pre">BB_SLURM_NODE_DIR</span></code>: Where can we place our artifacts on the node?</li>
+<li><code class="docutils literal"><span class="pre">BB_SLURM_PARTITION</span></code>: Which partition should we run in?</li>
+<li><code class="docutils literal"><span class="pre">BB_SLURM_SCRIPT</span></code>: Base name of our resulting batch script.</li>
+<li><code class="docutils literal"><span class="pre">BB_SLURM_TIMELIMIT</span></code>: Enforce a timelimit on our batch jobs.</li>
+</ul>
+</div></blockquote>
+<p>### Gentoo Configuration ###</p>
+<p>BenchBuild supports compile-time experiments on the complete portage tree of
+Gentoo Linux. You need to configure a few settings to make it work:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">BB_GENTOO_AUTOTEST_LOC</span></code>: A txt file that lists all gentoo package atoms that should be considered.</li>
+<li><code class="docutils literal"><span class="pre">BB_GENTOO_AUTOTEST_FTP_PROXY</span></code>: Proxy server for gentoo downloads.</li>
+<li><code class="docutils literal"><span class="pre">BB_GENTOO_AUTOTEST_HTTP_PROXY</span></code>: Proxy server for gentoo downloads.</li>
+<li><code class="docutils literal"><span class="pre">BB_GENTOO_AUTOTEST_RSYNC_PROXY</span></code>: Proxy server for gentoo downloads.</li>
+</ul>
+</div></blockquote>
+<p>#### Convert an automatic Gentoo project to a static one ####</p>
+<p>Gentoo projects are generated dynamically based on the <code class="docutils literal"><span class="pre">AutoPortage</span></code> class
+found in <code class="docutils literal"><span class="pre">pprof.gentoo.portage_gen</span></code>. If you want to define run-time tests for
+a dynamically generated project, you need to convert it to a static one, i.e.,
+define a subclass of <code class="docutils literal"><span class="pre">AutoPortage</span></code> and add it to the configuration.</p>
+<p><a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a>python
+from pprof.projects.gentoo.portage_gen import AutoPortage</p>
+<dl class="docutils">
+<dt>class BZip(AutoPortage):</dt>
+<dd><p class="first">NAME = &#8220;app-arch&#8221;
+DOMAIN = &#8220;bzip2&#8221;</p>
+<dl class="last docutils">
+<dt>def run_tests(self, experiment):</dt>
+<dd>&#8220;&#8221;&#8220;Add your custom test routines here.&#8221;&#8220;&#8221;</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id13"><span class="problematic" id="id14">``</span></a><a href="#id15"><span class="problematic" id="id16">`</span></a></p>
+<p>Now we just need to add this to the plugin registry via <code class="docutils literal"><span class="pre">benchbuild</span></code>&#8216;s
+configuration file &#64; <code class="docutils literal"><span class="pre">CFG[&quot;plugins&quot;][&quot;projects&quot;]</span></code>.</p>
+<p>## Usage ##</p>
+<p>BenchBuild is controlled using the <code class="docutils literal"><span class="pre">benchbuild</span> <span class="pre">run</span></code> command.
+<a href="#id17"><span class="problematic" id="id18">``</span></a>`
+❯ benchbuild run &#8211;help
+benchbuild run 1.0</p>
+<p>Frontend for running experiments in the benchbuild study framework.</p>
+<dl class="docutils">
+<dt>Usage:</dt>
+<dd>benchbuild run [SWITCHES]</dd>
+<dt>Meta-switches</dt>
+<dd><table class="first last docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></td>
+<td>Prints this help message and quits</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">--help-all</span></kbd></td>
+<td>Print help messages of all subcommands and quit</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-v</span>, <span class="option">--version</span></kbd></td>
+<td>Prints the program&#8217;s version and quits</td></tr>
+</tbody>
+</table>
+</dd>
+<dt>Switches</dt>
+<dd><p class="first">-D, &#8211;description DESCRIPTION:str      A description for this experiment run
+-E, &#8211;experiment EXPERIMENTS:str       Specify experiments to run; may be given multiple times
+-G, &#8211;group GROUP:str                  Run a group of projects under the given experiments; requires</p>
+<blockquote>
+<div>&#8211;experiment</div></blockquote>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-L</span>, <span class="option">--list-experiments</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>List available experiments</td></tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>-P, &#8211;project PROJECTS:str             Specify projects to run; may be given multiple times; requires</dt>
+<dd>&#8211;experiment</dd>
+</dl>
+<table class="last docutils option-list" frame="void" rules="none">
+<col class="option" />
+<col class="description" />
+<tbody valign="top">
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-d</span>, <span class="option">--dump-config</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>Just dump benchbuild&#8217;s config and exit.</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-l</span>, <span class="option">--list</span></kbd></td>
+<td>List available projects for experiment; requires &#8211;experiment</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-p</span>, <span class="option">--pretend</span></kbd></td>
+<td>Sets an attribute</td></tr>
+<tr><td class="option-group" colspan="2">
+<kbd><span class="option">-s</span>, <span class="option">--save-config</span></kbd></td>
+</tr>
+<tr><td>&nbsp;</td><td>Save benchbuild&#8217;s configuration.</td></tr>
+</tbody>
+</table>
+</dd>
+</dl>
+<p><a href="#id19"><span class="problematic" id="id20">``</span></a><a href="#id21"><span class="problematic" id="id22">`</span></a></p>
+<p>### Examples ###
+<code class="docutils literal"><span class="pre">benchbuild</span> <span class="pre">run</span> <span class="pre">-l</span></code> Lists all projects available sorted by group.</p>
+<p><code class="docutils literal"><span class="pre">benchbuild</span> <span class="pre">run</span> <span class="pre">-L</span></code> Lists all experiments available.</p>
+<p><code class="docutils literal"><span class="pre">benchbuild</span> <span class="pre">run</span> <span class="pre">-E&lt;experiment&gt;</span> <span class="pre">-P&lt;project&gt;</span></code> will execute the given experiment on the given project.</p>
+<p><code class="docutils literal"><span class="pre">benchbuild</span> <span class="pre">run</span> <span class="pre">-E&lt;experiment&gt;</span> <span class="pre">-G&lt;group&gt;</span></code> will execute the given experiment on the given group.</p>
+<p>### To be continued ###
+...</p>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="benchbuild.html">benchbuild package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="benchbuild.experiments.html">benchbuild.experiments package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.experiments.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.experiments.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.experiments.html#module-benchbuild.experiments.compilestats">benchbuild.experiments.compilestats module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.experiments.html#module-benchbuild.experiments.compilestats_ewpt">benchbuild.experiments.compilestats_ewpt module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.experiments.html#module-benchbuild.experiments.empty">benchbuild.experiments.empty module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.experiments.html#module-benchbuild.experiments.papi">benchbuild.experiments.papi module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.experiments.html#module-benchbuild.experiments.pjtest">benchbuild.experiments.pjtest module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.experiments.html#module-benchbuild.experiments.polyjit">benchbuild.experiments.polyjit module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.experiments.html#module-benchbuild.experiments.raw">benchbuild.experiments.raw module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="benchbuild.projects.html">benchbuild.projects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.projects.html#subpackages">Subpackages</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="benchbuild.reports.html">benchbuild.reports package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.reports.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.reports.html#module-benchbuild.reports.raw">benchbuild.reports.raw module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="benchbuild.utils.html">benchbuild.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.utils.html#module-benchbuild.utils.actions">benchbuild.utils.actions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.utils.html#module-benchbuild.utils.bootstrap">benchbuild.utils.bootstrap module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.utils.html#module-benchbuild.utils.compiler">benchbuild.utils.compiler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.utils.html#module-benchbuild.utils.container">benchbuild.utils.container module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.utils.html#module-benchbuild.utils.db">benchbuild.utils.db module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.utils.html#module-benchbuild.utils.downloader">benchbuild.utils.downloader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.utils.html#module-benchbuild.utils.log">benchbuild.utils.log module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.utils.html#module-benchbuild.utils.path">benchbuild.utils.path module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.utils.html#module-benchbuild.utils.run">benchbuild.utils.run module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.utils.html#module-benchbuild.utils.schema">benchbuild.utils.schema module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.utils.html#module-benchbuild.utils.slurm">benchbuild.utils.slurm module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.utils.html#module-benchbuild.utils.user_interface">benchbuild.utils.user_interface module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.utils.html#module-benchbuild.utils.versions">benchbuild.utils.versions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="benchbuild.utils.html#module-benchbuild.utils.wrapping">benchbuild.utils.wrapping module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.bootstrap">benchbuild.bootstrap module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.container">benchbuild.container module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.driver">benchbuild.driver module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.experiment">benchbuild.experiment module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="benchbuild.html#phases-steps-substeps">Phases / Steps / Substeps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="benchbuild.html#actions">Actions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.likwid">benchbuild.likwid module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.log">benchbuild.log module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.project">benchbuild.project module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.report">benchbuild.report module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.run">benchbuild.run module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.settings">benchbuild.settings module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.slurm">benchbuild.slurm module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchbuild.html#module-benchbuild.test">benchbuild.test module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="benchbuild.html" class="btn btn-neutral float-right" title="benchbuild package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andreas Simbürger.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.3.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

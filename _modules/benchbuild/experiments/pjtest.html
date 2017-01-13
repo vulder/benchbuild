@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>benchbuild.experiments.pjtest &mdash; BenchBuild - Empirical Research Toolkit 1.3.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="BenchBuild - Empirical Research Toolkit 1.3.2 documentation" href="../../../index.html"/>
+        <link rel="up" title="benchbuild.experiments" href="../experiments.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> BenchBuild - Empirical Research Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../benchbuild.html">benchbuild package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">BenchBuild - Empirical Research Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+          <li><a href="../experiments.html">benchbuild.experiments</a> &raquo;</li>
+      
+    <li>benchbuild.experiments.pjtest</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for benchbuild.experiments.pjtest</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A test experiment for PolyJIT.</span>
+
+<span class="sd">This experiment should only be used to test various features of PolyJIT. It</span>
+<span class="sd">provides only 1 configuration (maximum number of cores) and tests 2 run-time</span>
+<span class="sd">execution profiles of PolyJIT:</span>
+<span class="sd">  1) PolyJIT enabled, with specialization</span>
+<span class="sd">  2) PolyJIT enabled, without specialization</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+
+<span class="kn">from</span> <span class="nn">plumbum</span> <span class="k">import</span> <span class="n">local</span>
+
+<span class="kn">from</span> <span class="nn">benchbuild.utils.actions</span> <span class="k">import</span> <span class="p">(</span><span class="n">Build</span><span class="p">,</span> <span class="n">Clean</span><span class="p">,</span> <span class="n">Configure</span><span class="p">,</span> <span class="n">Download</span><span class="p">,</span>
+                                      <span class="n">MakeBuildDir</span><span class="p">,</span> <span class="n">Prepare</span><span class="p">,</span> <span class="n">Run</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">benchbuild.utils.cmd</span> <span class="k">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">benchbuild.experiments.polyjit</span> <span class="k">import</span> <span class="n">PolyJIT</span>
+
+
+<div class="viewcode-block" id="Test"><a class="viewcode-back" href="../../../benchbuild.experiments.html#benchbuild.experiments.pjtest.Test">[docs]</a><span class="k">class</span> <span class="nc">Test</span><span class="p">(</span><span class="n">PolyJIT</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An experiment that executes all projects with PolyJIT support.</span>
+
+<span class="sd">    This is our default experiment for speedup measurements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s2">&quot;pj-test&quot;</span>
+
+<div class="viewcode-block" id="Test.actions_for_project"><a class="viewcode-back" href="../../../benchbuild.experiments.html#benchbuild.experiments.pjtest.Test.actions_for_project">[docs]</a>    <span class="k">def</span> <span class="nf">actions_for_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">benchbuild.settings</span> <span class="k">import</span> <span class="n">CFG</span>
+
+        <span class="n">p</span> <span class="o">=</span> <span class="n">PolyJIT</span><span class="o">.</span><span class="n">init_project</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+        <span class="n">actns</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">run_uuid</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span>
+        <span class="n">jobs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">CFG</span><span class="p">[</span><span class="s2">&quot;jobs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">())</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">cflags</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;-mllvm&quot;</span><span class="p">,</span> <span class="s2">&quot;-polly-num-threads=</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">jobs</span><span class="p">)]</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">runtime_extension</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">time_polyjit_and_polly</span><span class="p">,</span>
+                                      <span class="n">p</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">CFG</span><span class="p">,</span> <span class="n">jobs</span><span class="p">)</span>
+
+        <span class="n">actns</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+            <span class="n">MakeBuildDir</span><span class="p">(</span><span class="n">p</span><span class="p">),</span>
+            <span class="n">Prepare</span><span class="p">(</span><span class="n">p</span><span class="p">),</span>
+            <span class="n">Download</span><span class="p">(</span><span class="n">p</span><span class="p">),</span>
+            <span class="n">Configure</span><span class="p">(</span><span class="n">p</span><span class="p">),</span>
+            <span class="n">Build</span><span class="p">(</span><span class="n">p</span><span class="p">),</span>
+            <span class="n">Run</span><span class="p">(</span><span class="n">p</span><span class="p">),</span>
+            <span class="n">Clean</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="p">])</span>
+        <span class="k">return</span> <span class="n">actns</span></div></div>
+
+
+<div class="viewcode-block" id="time_polyjit_and_polly"><a class="viewcode-back" href="../../../benchbuild.experiments.html#benchbuild.experiments.pjtest.time_polyjit_and_polly">[docs]</a><span class="k">def</span> <span class="nf">time_polyjit_and_polly</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">experiment</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">jobs</span><span class="p">,</span> <span class="n">run_f</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span>
+                           <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run the given binary wrapped with time.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        project: The benchbuild.project.</span>
+<span class="sd">        experiment: The benchbuild.experiment.</span>
+<span class="sd">        config: The benchbuild.settings.config.</span>
+<span class="sd">        jobs: Number of cores we should use for this exection.</span>
+<span class="sd">        run_f: The file we want to execute.</span>
+<span class="sd">        args: List of arguments that should be passed to the wrapped binary.</span>
+<span class="sd">        **kwargs: Dictionary with our keyword args. We support the following</span>
+<span class="sd">            entries:</span>
+
+<span class="sd">            project_name: The real name of our project. This might not</span>
+<span class="sd">                be the same as the configured project name, if we got wrapped</span>
+<span class="sd">                with ::benchbuild.project.wrap_dynamic</span>
+<span class="sd">            has_stdin: Signals whether we should take care of stdin.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">benchbuild.utils.run</span> <span class="k">import</span> <span class="n">guarded_exec</span><span class="p">,</span> <span class="n">fetch_time_output</span>
+    <span class="kn">from</span> <span class="nn">benchbuild.settings</span> <span class="k">import</span> <span class="n">CFG</span>
+    <span class="kn">from</span> <span class="nn">benchbuild.utils.db</span> <span class="k">import</span> <span class="n">persist_time</span><span class="p">,</span> <span class="n">persist_config</span>
+
+    <span class="n">CFG</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">project</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project_name&quot;</span><span class="p">,</span> <span class="n">project</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">timing_tag</span> <span class="o">=</span> <span class="s2">&quot;BB-JIT: &quot;</span>
+
+    <span class="n">may_wrap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;may_wrap&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">run_cmd</span> <span class="o">=</span> <span class="n">local</span><span class="p">[</span><span class="n">run_f</span><span class="p">]</span>
+    <span class="n">run_cmd</span> <span class="o">=</span> <span class="n">run_cmd</span><span class="p">[</span><span class="n">args</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">may_wrap</span><span class="p">:</span>
+        <span class="n">run_cmd</span> <span class="o">=</span> <span class="n">time</span><span class="p">[</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="n">timing_tag</span> <span class="o">+</span> <span class="s2">&quot;%U-%S-</span><span class="si">%e</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">run_cmd</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">handle_timing_info</span><span class="p">(</span><span class="n">ri</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">may_wrap</span><span class="p">:</span>
+            <span class="n">timings</span> <span class="o">=</span> <span class="n">fetch_time_output</span><span class="p">(</span>
+                <span class="n">timing_tag</span><span class="p">,</span> <span class="n">timing_tag</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{:g}</span><span class="s2">-</span><span class="si">{:g}</span><span class="s2">-</span><span class="si">{:g}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">ri</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">timings</span><span class="p">:</span>
+                <span class="n">persist_time</span><span class="p">(</span><span class="n">ri</span><span class="o">.</span><span class="n">db_run</span><span class="p">,</span> <span class="n">ri</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">timings</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ri</span>
+
+    <span class="k">with</span> <span class="n">local</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="n">OMP_NUM_THREADS</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">jobs</span><span class="p">),</span>
+                   <span class="n">POLLI_LOG_FILE</span><span class="o">=</span><span class="n">CFG</span><span class="p">[</span><span class="s2">&quot;slurm&quot;</span><span class="p">][</span><span class="s2">&quot;extra_log&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">()):</span>
+        <span class="k">with</span> <span class="n">guarded_exec</span><span class="p">(</span><span class="n">run_cmd</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">experiment</span><span class="p">)</span> <span class="k">as</span> <span class="n">run</span><span class="p">:</span>
+            <span class="n">ri</span> <span class="o">=</span> <span class="n">handle_timing_info</span><span class="p">(</span><span class="n">run</span><span class="p">())</span>
+    <span class="n">persist_config</span><span class="p">(</span><span class="n">ri</span><span class="o">.</span><span class="n">db_run</span><span class="p">,</span> <span class="n">ri</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;cores&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">jobs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+                                           <span class="s2">&quot;cores-config&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">jobs</span><span class="p">),</span>
+                                           <span class="s2">&quot;recompilation&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
+                                           <span class="s2">&quot;specialization&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">})</span>
+
+    <span class="k">with</span> <span class="n">local</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="n">OMP_NUM_THREADS</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">jobs</span><span class="p">),</span>
+                   <span class="n">POLLI_DISABLE_SPECIALIZATION</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                   <span class="n">POLLI_LOG_FILE</span><span class="o">=</span><span class="n">CFG</span><span class="p">[</span><span class="s2">&quot;slurm&quot;</span><span class="p">][</span><span class="s2">&quot;extra_log&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">()):</span>
+        <span class="k">with</span> <span class="n">guarded_exec</span><span class="p">(</span><span class="n">run_cmd</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">experiment</span><span class="p">)</span> <span class="k">as</span> <span class="n">run</span><span class="p">:</span>
+            <span class="n">ri</span> <span class="o">=</span> <span class="n">handle_timing_info</span><span class="p">(</span><span class="n">run</span><span class="p">())</span>
+    <span class="n">persist_config</span><span class="p">(</span><span class="n">ri</span><span class="o">.</span><span class="n">db_run</span><span class="p">,</span> <span class="n">ri</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;cores&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">jobs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+                                           <span class="s2">&quot;cores-config&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">jobs</span><span class="p">),</span>
+                                           <span class="s2">&quot;recompilation&quot;</span><span class="p">:</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span>
+                                           <span class="s2">&quot;specialization&quot;</span><span class="p">:</span> <span class="s2">&quot;disabled&quot;</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">ri</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Andreas Simbürger.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.3.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
