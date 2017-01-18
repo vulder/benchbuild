@@ -194,8 +194,10 @@
         <span class="k">return</span> <span class="n">new_self</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exp_ids</span><span class="p">,</span> <span class="n">out_path</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">benchbuild.utils.schema</span> <span class="k">as</span> <span class="nn">schema</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">experiment_ids</span> <span class="o">=</span> <span class="n">exp_ids</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out_path</span> <span class="o">=</span> <span class="n">out_path</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_path</span> <span class="o">=</span> <span class="n">out_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span></div>
 </pre></div>
 
            </div>

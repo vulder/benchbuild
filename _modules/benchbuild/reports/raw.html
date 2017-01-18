@@ -150,8 +150,6 @@
 
     <span class="n">SUPPORTED_EXPERIMENTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;raw&quot;</span><span class="p">]</span>
 
-    <span class="n">session</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
-
 <div class="viewcode-block" id="RawReport.get_exp_ids"><a class="viewcode-back" href="../../../benchbuild.reports.html#benchbuild.reports.raw.RawReport.get_exp_ids">[docs]</a>    <span class="k">def</span> <span class="nf">get_exp_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Experiment</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
             <span class="n">Experiment</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="n">RawReport</span><span class="o">.</span><span class="n">SUPPORTED_EXPERIMENTS</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>

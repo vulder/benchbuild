@@ -1220,6 +1220,28 @@ the container.</li>
 </dd></dl>
 
 <dl class="function">
+<dt id="benchbuild.utils.path.template_files">
+<code class="descclassname">benchbuild.utils.path.</code><code class="descname">template_files</code><span class="sig-paren">(</span><em>path</em>, <em>exts=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/utils/path.html#template_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.utils.path.template_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of filenames found at &#64;path.</p>
+<p>The list of filenames can be filtered by extensions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> &#8211; Existing filepath we want to list.</li>
+<li><strong>exts</strong> &#8211; List of extensions to filter by.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A list of filenames found in the path.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="benchbuild.utils.path.template_str">
 <code class="descclassname">benchbuild.utils.path.</code><code class="descname">template_str</code><span class="sig-paren">(</span><em>template</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/benchbuild/utils/path.html#template_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#benchbuild.utils.path.template_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a template file from the resources and return it as str.</p>
@@ -1631,7 +1653,22 @@ as &#8216;./union&#8217;.</li>
 </div>
 <div class="section" id="module-benchbuild.utils.schema">
 <span id="benchbuild-utils-schema-module"></span><h2>benchbuild.utils.schema module<a class="headerlink" href="#module-benchbuild.utils.schema" title="Permalink to this headline">¶</a></h2>
-<p>Database schema for benchbuild.</p>
+<div class="section" id="database-schema-for-benchbuild">
+<h3>Database schema for benchbuild<a class="headerlink" href="#database-schema-for-benchbuild" title="Permalink to this headline">¶</a></h3>
+<p>The schema should initialize itself on an empty database. For now, we do not
+support automatic upgrades on schema changes. You might encounter some
+roadbumps when using an older version of benchbuild.</p>
+<p>Furthermore, for now, we are restricted to postgresql databases, although we
+already support arbitrary connection strings via config.</p>
+<p>If you want to use reports that use one of our SQL functions, you need to
+initialize the functions first using the following command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>&gt; <span class="nv">BB_DB_CREATE_FUNCTIONS</span><span class="o">=</span><span class="nb">true</span> benchbuild run -E empty -l
+</pre></div>
+</div>
+<p>After that you (normally) do not need to do this agains, unless we supply
+a new version that you are interested in.
+As soon as we have alembic running, we can provide automatic up/downgrade
+paths for you.</p>
 <dl class="data">
 <dt id="benchbuild.utils.schema.CONNECTION_MANAGER">
 <code class="descclassname">benchbuild.utils.schema.</code><code class="descname">CONNECTION_MANAGER</code><em class="property"> = &lt;benchbuild.utils.schema.SessionManager object&gt;</em><a class="headerlink" href="#benchbuild.utils.schema.CONNECTION_MANAGER" title="Permalink to this definition">¶</a></dt>
@@ -2123,6 +2160,7 @@ are stored here.</p>
 
 </dd></dl>
 
+</div>
 </div>
 <div class="section" id="module-benchbuild.utils.slurm">
 <span id="benchbuild-utils-slurm-module"></span><h2>benchbuild.utils.slurm module<a class="headerlink" href="#module-benchbuild.utils.slurm" title="Permalink to this headline">¶</a></h2>

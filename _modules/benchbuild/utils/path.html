@@ -159,6 +159,29 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
 
 
+<div class="viewcode-block" id="template_files"><a class="viewcode-back" href="../../../benchbuild.utils.html#benchbuild.utils.path.template_files">[docs]</a><span class="k">def</span> <span class="nf">template_files</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">exts</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a list of filenames found at @path.</span>
+
+<span class="sd">    The list of filenames can be filtered by extensions.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        path: Existing filepath we want to list.</span>
+<span class="sd">        exts: List of extensions to filter by.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of filenames found in the path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">determine_path</span><span class="p">(),</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">_path</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="p">[]</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">_path</span><span class="p">)</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">f</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">exts</span><span class="p">]</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">files</span></div>
+
+
 <div class="viewcode-block" id="template_str"><a class="viewcode-back" href="../../../benchbuild.utils.html#benchbuild.utils.path.template_str">[docs]</a><span class="k">def</span> <span class="nf">template_str</span><span class="p">(</span><span class="n">template</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Read a template file from the resources and return it as str.&quot;&quot;&quot;</span>
     <span class="n">tmpl_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">determine_path</span><span class="p">(),</span> <span class="n">template</span><span class="p">)</span>

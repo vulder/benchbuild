@@ -240,12 +240,15 @@
     <span class="k">if</span> <span class="n">pkg_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">PACKAGES</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No bootstrap support for package &#39;</span><span class="si">{0}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pkg_name</span><span class="p">))</span>
     <span class="n">linux</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">linux_distribution_major</span><span class="p">()</span>
-    <span class="n">pm</span> <span class="o">=</span> <span class="n">PACKAGE_MANAGER</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">linux</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+    <span class="n">linux</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">linux</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="n">package_manager</span> <span class="o">=</span> <span class="n">PACKAGE_MANAGER</span><span class="p">[</span><span class="n">linux</span><span class="p">]</span>
     <span class="n">packages</span> <span class="o">=</span> <span class="n">PACKAGES</span><span class="p">[</span><span class="n">pkg_name</span><span class="p">][</span><span class="n">linux</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">pkg_name_on_host</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You are missing the package: &#39;</span><span class="si">{0}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pkg_name_on_host</span><span class="p">))</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">local</span><span class="p">[</span><span class="s2">&quot;sudo&quot;</span><span class="p">]</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="p">[</span><span class="n">pm</span><span class="p">[</span><span class="s2">&quot;cmd&quot;</span><span class="p">],</span> <span class="n">pm</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">],</span> <span class="n">pkg_name_on_host</span><span class="p">]</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="p">[</span><span class="n">package_manager</span><span class="p">[</span><span class="s2">&quot;cmd&quot;</span><span class="p">],</span>
+                  <span class="n">package_manager</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">],</span>
+                  <span class="n">pkg_name_on_host</span><span class="p">]</span>
         <span class="n">cmd_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
 
         <span class="n">ret</span> <span class="o">=</span> <span class="kc">False</span>
