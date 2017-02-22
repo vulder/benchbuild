@@ -106,10 +106,21 @@ def filter_compiler_commandline(cmd, predicate = lambda x : True):
 
 
 def run_sequence(project, experiment, compiler, key, seq_to_fitness, sequence):
+    from benchbuild.utils.cmd import salloc, srun
+
     def fitness(l, r):
         return max((l - r) / r, 0)
 
-    local_compiler = compiler[sequence, "-polly-detect"]
+    partition = "anywhere"
+    account = "anywhere"
+    num_tasks = 1
+    num_cpus = 1
+
+    local_compiler = salloc["-n", num_tasks, "-c", num_cpus,
+                            "-p", partition, "-A", account, "--",
+                            srun[
+                                compiler[sequence, "-polly-detect"]]]
+    #local_compiler = compiler[sequence, "-polly-detect"]
     _, _, stderr = local_compiler.run(retcode=None)
     stats = [s for s in get_compilestats(stderr) \
                 if s['desc'] in [
